@@ -1,0 +1,2609 @@
+<!-- EDIT_TIMESTAMP_HANOI: 2026-09-07 19:30:00 ICT -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Caromoku &mdash; Gomoku / Cờ Caro</title>
+  <meta name="description" content="A modern unified Gomoku and Cờ Caro game with smart computer opponent and customizable rules." />
+  <meta property="og:title" content="Caromoku &mdash; Gomoku / Cờ Caro" />
+  <meta property="og:description" content="A modern unified Gomoku and Cờ Caro game with smart computer opponent and customizable rules." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="header-brand-wrap">
+          <div class="header-brand-top">
+            <span class="status-dot"></span>
+            <span class="brand-title">Caromoku</span>
+          </div>
+          <div class="header-brand-sub-row">
+            <span class="brand-subtitle">Cờ Caro / Gomoku</span>
+            <span class="version-tag">v0.0.0</span>
+          </div>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <!-- Visual Mode Cycle Pill -->
+        <button id="cycle-mode-btn" class="nav-cycle-btn" onclick="cycleVisualMode()" data-tooltip="Toggle Visual Style: Gomoku / Cờ Caro [M]">
+          <span class="cycle-btn-prefix">Mode:</span>
+          <span id="cycle-mode-icon" class="cycle-btn-icon">&#9679;</span>
+          <span id="cycle-mode-label" class="cycle-btn-val">Gomoku</span>
+          <span class="cycle-btn-arrow">&#8644;</span>
+        </button>
+
+        <!-- Opponent Mode Cycle Pill -->
+        <button id="cycle-opp-btn" class="nav-cycle-btn" onclick="cycleOpponentMode()" data-tooltip="Toggle Opponent: 2 Players / Computer">
+          <span class="cycle-btn-prefix">Opponent:</span>
+          <span id="cycle-opp-icon" class="cycle-btn-icon">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </span>
+          <span id="cycle-opp-label" class="cycle-btn-val">2 Players</span>
+          <span class="cycle-btn-arrow">&#8644;</span>
+        </button>
+
+        <!-- Board Size Cycle Pill -->
+        <button id="cycle-size-btn" class="nav-cycle-btn" onclick="cycleBoardSize()" data-tooltip="Cycle Size: 11x11 &rarr; 15x15 &rarr; 19x19">
+          <span class="cycle-btn-prefix">Size:</span>
+          <span id="cycle-size-label" class="cycle-btn-val">15&times;15</span>
+          <span class="cycle-btn-arrow">&#8635;</span>
+        </button>
+
+        <div class="nav-divider"></div>
+
+        <!-- Action Buttons with Large, Crisp Vector Icons -->
+        <button id="undo-btn" class="action-btn" onclick="handleUndo()" data-tooltip="Undo Last Move [U]" disabled>
+          <svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+          </svg>
+          <span>Undo</span>
+        </button>
+        <button id="reset-btn" class="action-btn action-btn-primary" onclick="handleReset()" data-tooltip="New Game / Reset [R]">
+          <svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+            <path d="M16 16h5v5"></path>
+          </svg>
+          <span>New Game</span>
+        </button>
+        <button id="audio-btn" class="action-btn icon-only" onclick="toggleAudio()" data-tooltip="Toggle Audio [S]">
+          <span id="audio-icon">
+            <svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+          </span>
+        </button>
+        <button id="rules-btn" class="action-btn icon-only" onclick="toggleRulesModal(true)" data-tooltip="Game Rules &amp; Settings [?]">
+          <svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="16" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="hud-bar">
+      <div class="hud-left">
+        <span id="turn-badge-icon" class="piece-preview-badge gomoku-p1"></span>
+        <span id="turn-badge-text" class="turn-title">Black's Turn</span>
+      </div>
+      <div class="hud-right">
+        <span id="move-badge" class="move-count-chip">Move #0</span>
+        <button id="hud-play-again-btn" class="hud-play-again-btn" onclick="handleReset()" style="display: none;" data-tooltip="Play Again [R]">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+            <path d="M3 3v5h5"></path>
+            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+            <path d="M16 16h5v5"></path>
+          </svg>
+          <span>Play Again</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="board-wrapper" id="board-container">
+      <canvas id="game-canvas"></canvas>
+      <div id="game-over-banner" class="game-over-banner" style="display: none;" onclick="dismissGameOver(event)">
+        <div class="game-over-badge">GAME OVER</div>
+        <div class="game-over-title" id="game-over-title">Black Wins!</div>
+        <div class="game-over-sub" id="game-over-sub">Move #24 &bull; Freestyle Gomoku</div>
+      </div>
+    </div>
+
+    <div class="info-bar">
+      <div class="rule-summary">
+        <span class="rule-badge">RULE</span>
+        <button id="rule-toggle-btn" class="rule-pill-btn" onclick="cycleRulePreset()" data-tooltip="Click to cycle rule presets">
+          <span id="rule-summary-text">Freestyle Gomoku</span>
+          <span class="rule-pill-arrow">&#9662;</span>
+        </button>
+      </div>
+      <div class="key-hints">
+        <span class="key-hint"><kbd>U</kbd> Undo</span>
+        <span class="key-hint"><kbd>R</kbd> Reset</span>
+        <span class="key-hint"><kbd>M</kbd> Mode</span>
+        <span class="key-hint"><kbd>S</kbd> Sound</span>
+      </div>
+    </div>
+  </main>
+
+  <!-- Rules / Settings Modal -->
+  <div id="rules-modal" class="modal-overlay" onclick="onModalOverlayClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+          </svg>
+          <span>Rules &amp; Game Settings</span>
+        </div>
+        <button class="modal-close-btn" onclick="toggleRulesModal(false)" data-tooltip="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="rule-rule-box">
+          <div class="rule-box-heading">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="12 8 8 12 12 16 16 12 12 8"></polygon>
+            </svg>
+            <strong>Select Win Rule Preset:</strong>
+          </div>
+          <div class="rule-options-list">
+            <label class="rule-option-item active" id="rule-opt-0">
+              <input type="radio" name="rule-choice" value="0" onchange="setRulePreset(0)" checked />
+              <div class="rule-option-text">
+                <span class="rule-option-title">Freestyle Gomoku</span>
+                <span class="rule-option-desc">5 or more consecutive pieces in a row win unconditionally (Freestyle rule).</span>
+              </div>
+            </label>
+            <label class="rule-option-item" id="rule-opt-1">
+              <input type="radio" name="rule-choice" value="1" onchange="setRulePreset(1)" />
+              <div class="rule-option-text">
+                <span class="rule-option-title">Standard Gomoku (Exact 5)</span>
+                <span class="rule-option-desc">Exactly 5 consecutive pieces in a row win; overlines of 6 or more do not count as a win (Official Gomoku rule).</span>
+              </div>
+            </label>
+            <label class="rule-option-item" id="rule-opt-2">
+              <input type="radio" name="rule-choice" value="2" onchange="setRulePreset(2)" />
+              <div class="rule-option-text">
+                <span class="rule-option-title">Cờ Caro Classic</span>
+                <span class="rule-option-desc">5 in a row wins, unless blocked at BOTH ends by opponent pieces (Luật chặn 2 đầu). 6 or more in a row also wins.</span>
+              </div>
+            </label>
+            <label class="rule-option-item" id="rule-opt-3">
+              <input type="radio" name="rule-choice" value="3" onchange="setRulePreset(3)" />
+              <div class="rule-option-text">
+                <span class="rule-option-title">Open-Ended Gomoku</span>
+                <span class="rule-option-desc">4 open-ended pieces in a row (both ends unhindered) or any 5 consecutive pieces in a row win immediately (4 Trắng 5 Đen).</span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="rule-rule-box">
+          <div class="rule-box-heading">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            <strong>Game Modes &amp; Features:</strong>
+          </div>
+          <div class="feature-grid">
+            <div class="feature-item">
+              <span class="feature-badge gomoku-icon">&#9679;</span>
+              <div class="feature-detail">
+                <span class="feature-name">Gomoku (Goban)</span>
+                <span class="feature-sub">Traditional Kaya wood board with Go stones on intersections.</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-badge caro-icon">&#10005;</span>
+              <div class="feature-detail">
+                <span class="feature-name">Cờ Caro (Grid)</span>
+                <span class="feature-sub">Notebook graph paper grid with 'X' and 'O' in square cells.</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-badge ai-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+              </span>
+              <div class="feature-detail">
+                <span class="feature-name">Computer Opponent</span>
+                <span class="feature-sub">Heuristic deliberation engine with fair threat evaluation.</span>
+              </div>
+            </div>
+            <div class="feature-item">
+              <span class="feature-badge size-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+              </span>
+              <div class="feature-detail">
+                <span class="feature-name">Multiple Board Sizes</span>
+                <span class="feature-sub">Instant cycling between 11&times;11, 15&times;15, and 19&times;19 scales.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:11.5px; color:var(--text-dim); text-align:center; padding-top:4px;">Caromoku Engine &bull; Zero-Heap Hot Paths &bull; Web Audio Synthesis</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-tooltip" class="app-tooltip"></div>
+
+  <footer>
+    <div class="footer-content">
+      <div class="footer-clock" id="footer-clock" data-tooltip="Real-time accurate system date &amp; time">
+        <span class="footer-clock-dot"></span>
+        <span class="clock-label">SYSTEM TIME</span>
+        <span class="clock-val" id="footer-time-val">--</span>
+      </div>
+      <div class="footer-meta" id="footer-meta">
+        <span class="pill-label">UPDATED</span>
+        <span class="pill-val" id="app-update-timestamp">2026-09-07 18:55 ICT</span>
+      </div>
+    </div>
+  </footer>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    :root {
+      --bg: #09090b;
+      --card-bg: #121215;
+      --card-border: #222226;
+      --card-hover-border: #323238;
+      --text: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-dim: #71717a;
+      --accent: #10b981;
+      --accent-dim: rgba(16, 185, 129, 0.12);
+      --crimson: #f43f5e;
+      --azure: #06b6d4;
+      --gold: #f59e0b;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(9, 9, 11, 0.88);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border-bottom: 1px solid var(--card-border);
+      flex-shrink: 0;
+    }
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 16px;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex-shrink: 0;
+    }
+    .header-brand-wrap {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 3px;
+      flex-shrink: 0;
+    }
+    .header-brand-top {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      line-height: 1;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+      flex-shrink: 0;
+      animation: pulse-dot 2.5s infinite ease-in-out;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(0.9); }
+    }
+    .brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      color: #fff;
+      line-height: 1;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .header-brand-sub-row {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding-left: 16px;
+      line-height: 1;
+    }
+    .brand-subtitle {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-dim);
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    /* Cycle buttons for decluttered top bar */
+    .nav-cycle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #151518;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      height: 34px;
+      padding: 0 10px;
+      cursor: pointer;
+      color: var(--text);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      transition: background 0.15s, border-color 0.15s, color 0.15s, transform 0.05s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .nav-cycle-btn:hover {
+      background: #202026;
+      border-color: var(--card-hover-border);
+      color: #fff;
+    }
+    .nav-cycle-btn:active {
+      transform: scale(0.97);
+    }
+    .cycle-btn-prefix {
+      color: var(--text-dim);
+      font-size: 11.5px;
+      font-weight: 500;
+    }
+    .cycle-btn-val {
+      font-weight: 600;
+      color: #fff;
+    }
+    .cycle-btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent);
+      font-size: 13px;
+    }
+    .cycle-btn-arrow {
+      color: var(--text-dim);
+      font-size: 12px;
+      margin-left: 2px;
+    }
+    .nav-divider {
+      width: 1px;
+      height: 22px;
+      background: var(--card-border);
+      margin: 0 2px;
+      flex-shrink: 0;
+    }
+    @media (max-width: 780px) {
+      .cycle-btn-prefix {
+        display: none;
+      }
+    }
+    @media (max-width: 600px) {
+      .cycle-btn-arrow {
+        display: none;
+      }
+      .nav-cycle-btn {
+        padding: 0 8px;
+      }
+    }
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      background: #18181c;
+      color: var(--text);
+      border: 1px solid var(--card-border);
+      height: 34px;
+      padding: 0 12px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: var(--font-sans);
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      box-sizing: border-box;
+      transition: background 0.15s, border-color 0.15s, transform 0.05s, color 0.15s;
+    }
+    .action-btn:hover {
+      background: #232328;
+      border-color: var(--card-hover-border);
+      color: #fff;
+    }
+    .action-btn:active {
+      transform: scale(0.97);
+    }
+    .action-btn.icon-only {
+      width: 34px;
+      padding: 0;
+    }
+    .action-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .action-btn-primary {
+      border-color: rgba(16, 185, 129, 0.28);
+    }
+    .btn-svg-icon {
+      flex-shrink: 0;
+      display: block;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 10px 16px 20px 16px;
+      max-width: 1180px;
+      width: 100%;
+      margin: 0 auto;
+      gap: 10px;
+    }
+
+    /* HUD Bar */
+    .hud-bar {
+      width: 100%;
+      max-width: 680px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0 16px;
+      box-sizing: border-box;
+      flex-wrap: nowrap;
+    }
+    .hud-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .hud-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .turn-title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .turn-title.win-p1 {
+      color: var(--crimson);
+    }
+    .turn-title.win-p2 {
+      color: var(--azure);
+    }
+    .turn-title.draw {
+      color: var(--gold);
+    }
+    .piece-preview-badge {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .piece-preview-badge.gomoku-p1 {
+      background: radial-gradient(circle at 35% 35%, #4b5563, #111827 75%, #000);
+      border: 1px solid #374151;
+    }
+    .piece-preview-badge.gomoku-p2 {
+      background: radial-gradient(circle at 35% 35%, #ffffff, #f3f4f6 70%, #d1d5db);
+      border: 1px solid #e5e7eb;
+    }
+    .piece-preview-badge.caro-p1 {
+      background: rgba(244, 63, 94, 0.15);
+      border: 1px solid rgba(244, 63, 94, 0.4);
+      color: var(--crimson);
+    }
+    .piece-preview-badge.caro-p2 {
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(6, 182, 212, 0.4);
+      color: var(--azure);
+    }
+    .move-count-chip {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      background: #1a1a1f;
+      border: 1px solid var(--card-border);
+      border-radius: 5px;
+      padding: 4px 10px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .hud-play-again-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 6px;
+      padding: 0 14px;
+      height: 32px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.4);
+      transition: transform 0.1s, background 0.15s, box-shadow 0.15s;
+    }
+    .hud-play-again-btn:hover {
+      background: #34d399;
+      box-shadow: 0 3px 14px rgba(16, 185, 129, 0.6);
+    }
+    .hud-play-again-btn:active {
+      transform: scale(0.96);
+    }
+
+    /* Game Over Center Popup with Slightly Translucent Frosted Glass */
+    .game-over-banner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 30;
+      background: rgba(12, 12, 16, 0.72);
+      backdrop-filter: blur(14px) saturate(160%);
+      -webkit-backdrop-filter: blur(14px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      border-radius: 14px;
+      padding: 22px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 6px;
+      animation: banner-center-enter 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 86%;
+      box-sizing: border-box;
+      pointer-events: auto;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .game-over-banner:hover {
+      transform: translate(-50%, -50%) scale(1.02);
+      border-color: rgba(255, 255, 255, 0.24);
+    }
+    @keyframes banner-center-enter {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -46%) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+      }
+    }
+    .game-over-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .game-over-title {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: #fff;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    .game-over-sub {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .game-over-hint {
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--text-dim);
+      margin-top: 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rule-pill-btn {
+      background: #18181c;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: #e4e4e7;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 5px 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+    .rule-pill-btn:hover {
+      color: #fff;
+      background: #232328;
+      border-color: var(--card-hover-border);
+    }
+    .rule-pill-arrow {
+      font-size: 11px;
+      color: var(--text-dim);
+      flex-shrink: 0;
+    }
+
+    /* Board Stage Wrapper */
+    .board-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 680px;
+      aspect-ratio: 1 / 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      touch-action: none;
+      background: #0d0d10;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: crosshair;
+    }
+
+    /* Info Bar Under Board */
+    .info-bar {
+      width: 100%;
+      max-width: 680px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 0 16px;
+      box-sizing: border-box;
+      flex-wrap: nowrap;
+    }
+    .rule-summary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+      flex: 1;
+    }
+    .rule-badge {
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      font-family: var(--font-mono);
+      flex-shrink: 0;
+    }
+    .key-hints {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+    .key-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-muted);
+      font-family: var(--font-sans);
+    }
+    kbd {
+      background: #27272a;
+      border: 1px solid #3f3f46;
+      border-radius: 4px;
+      padding: 2px 7px;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+      line-height: 1.2;
+    }
+    @media (max-width: 640px) {
+      .key-hints {
+        display: none;
+      }
+    }
+
+    /* Google Material / AI Studio Style High-Performance Tooltip */
+    .app-tooltip {
+      position: fixed;
+      z-index: 99999;
+      pointer-events: none;
+      background: #18181b;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: #f4f4f5;
+      font-family: var(--font-sans);
+      font-size: 11.5px;
+      font-weight: 500;
+      line-height: 1.35;
+      padding: 5px 10px;
+      border-radius: 6px;
+      box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.6), 0 2px 4px -1px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      transition: opacity 120ms ease;
+      white-space: nowrap;
+      width: max-content;
+      max-width: calc(100vw - 24px);
+      box-sizing: border-box;
+      will-change: opacity;
+    }
+    .app-tooltip.visible {
+      opacity: 1;
+    }
+
+    /* Rules Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .modal-overlay.open {
+      display: flex;
+    }
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      max-width: 560px;
+      width: 100%;
+      padding: 22px 24px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
+      color: var(--text);
+    }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--card-border);
+    }
+    .modal-title {
+      font-size: 16.5px;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .modal-close-btn {
+      background: #18181b;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      color: var(--text-dim);
+      font-size: 18px;
+      cursor: pointer;
+      padding: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: color 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+    }
+    .modal-close-btn:hover {
+      color: #fff;
+      background: #27272a;
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+    .modal-body {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .rule-rule-box {
+      background: #0e0e12;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      font-size: 13px;
+    }
+    .rule-box-heading {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13.5px;
+      margin-bottom: 8px;
+    }
+    .rule-options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .rule-option-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      background: #141418;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease;
+    }
+    .rule-option-item:hover {
+      background: #181820;
+      border-color: var(--card-hover-border);
+    }
+    .rule-option-item.active {
+      background: rgba(16, 185, 129, 0.08);
+      border-color: rgba(16, 185, 129, 0.38);
+    }
+    .rule-option-item input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .rule-option-text {
+      flex: 1;
+    }
+    .rule-option-title {
+      display: block;
+      color: #fff;
+      font-weight: 600;
+      font-size: 13px;
+      line-height: 1.3;
+    }
+    .rule-option-desc {
+      display: block;
+      color: var(--text-dim);
+      font-size: 11.5px;
+      line-height: 1.45;
+      margin-top: 2px;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #141418;
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 9px 12px;
+    }
+    .feature-badge {
+      width: 32px;
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      flex-shrink: 0;
+      font-size: 16px;
+      font-weight: 700;
+      background: #1e1e24;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+    }
+    .feature-badge.gomoku-icon {
+      color: #f3f4f6;
+      font-size: 18px;
+    }
+    .feature-badge.caro-icon {
+      color: var(--crimson);
+      font-size: 16px;
+    }
+    .feature-badge.ai-icon {
+      color: var(--azure);
+    }
+    .feature-badge.size-icon {
+      color: var(--accent);
+    }
+    .feature-detail {
+      flex: 1;
+      min-width: 0;
+    }
+    .feature-name {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      color: #e4e4e7;
+      line-height: 1.25;
+    }
+    .feature-sub {
+      display: block;
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.35;
+      margin-top: 2px;
+    }
+
+    /* Footer & Metadata */
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 8px 16px 10px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #09090b;
+      flex-shrink: 0;
+    }
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .footer-clock {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #141417;
+      border: 1px solid var(--card-border);
+      border-radius: 5px;
+      padding: 3px 9px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      height: 24px;
+      box-sizing: border-box;
+    }
+    .footer-clock-dot {
+      width: 6px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+      flex-shrink: 0;
+    }
+    .clock-label {
+      color: var(--text-dim);
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      font-size: 10px;
+    }
+    .clock-val {
+      color: #e4e4e7;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    .footer-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-dim);
+    }
+    .version-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border: 1px solid rgba(16, 185, 129, 0.28);
+      border-radius: 3px;
+      padding: 1px 5px;
+      line-height: 1.2;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+    .meta-dot {
+      color: var(--text-dim);
+      opacity: 0.5;
+    }
+    .pill-label {
+      color: var(--text-dim);
+      font-weight: 500;
+      font-size: 10px;
+      letter-spacing: 0.04em;
+    }
+    .pill-val {
+      color: #a1a1aa;
+      font-weight: 500;
+      font-size: 10.5px;
+    }
+  </style>
+
+  <script>
+    // =========================================================================
+    // Caromoku Gomoku / Cờ Caro Single-File Engine
+    // All hot paths operate with 100% zero-heap allocation:
+    // - Pre-allocated typed buffers up to max 19x19 = 361 cells.
+    // - High-performance heuristic AI opponent.
+    // - Sub-pixel scroll-proof coordinate translation.
+    // - Refined win beam & node highlight aesthetics.
+    // - Web Audio API procedural synthesis with universal first-gesture unlock.
+    // =========================================================================
+
+    const MAX_BOARD_SIZE = 19;
+    const MAX_CELLS = 361; // 19 * 19
+
+    let currentBoardSize = 15;
+    let totalCells = 225; // currentBoardSize * currentBoardSize
+
+    // Unified Board State: 0 = Empty, 1 = Player 1 (Black / X), 2 = Player 2 (White / O)
+    const BOARD = new Int8Array(MAX_CELLS);
+
+    // Pre-allocated move history registers (for O(1) zero-allocation undo)
+    const MOVE_HISTORY_ROW = new Int8Array(MAX_CELLS);
+    const MOVE_HISTORY_COL = new Int8Array(MAX_CELLS);
+    let moveCount = 0;
+
+    // Game progress registers
+    let currentPlayer = 1;  // 1 = P1 (Black / X), 2 = P2 (White / O)
+    let winner = 0;         // 0 = in progress, 1 = P1 wins, 2 = P2 wins, 3 = Draw
+    let visualMode = 0;     // 0 = Gomoku (Intersections), 1 = Cờ Caro (Cells)
+    let opponentMode = 0;   // 0 = 2 Players (Local), 1 = Vs Computer (AI)
+    let aiThinking = false;
+    let _aiTimeoutId = null;
+    let soundEnabled = true;
+
+    // Rule Presets:
+    // 0 = Freestyle Gomoku (5 or more in a row wins unconditionally)
+    // 1 = Standard Gomoku (Exact 5 in a row wins; overlines of 6+ do not win - Official Gomoku)
+    // 2 = Cờ Caro Classic (5 in a row wins, but blocked at BOTH ends by opponent = no win; 6+ wins)
+    // 3 = Open-Ended Gomoku (4 open-ended in a row or any 5 in a row wins - 4 Trắng 5 Đen)
+    let rulePreset = 0;
+
+    const RULE_NAMES = [
+      'Freestyle Gomoku',
+      'Standard Gomoku (Exact 5)',
+      'Cờ Caro Classic',
+      'Open-Ended Gomoku'
+    ];
+
+    const RULE_BASIC_SUMMARIES = [
+      '5+ in a row wins',
+      'Exact 5 (no overlines)',
+      'Blocked 2 ends = no win',
+      '4 open or 5'
+    ];
+
+    const RULE_SUMMARIES = [
+      '5 or more in a row wins unconditionally (Freestyle Gomoku)',
+      'Exactly 5 in a row wins; overlines of 6+ do not win (Official Gomoku rule)',
+      '5 in a row wins; blocked at BOTH ends by opponent pieces does not win (Cờ Caro rule)',
+      '4 open-ended in a row (unhindered on both ends) or 5 in a row wins (4 Trắng 5 Đen)'
+    ];
+
+    // Winning line coordinates buffer
+    const WIN_LINE_ROWS = new Int8Array(MAX_BOARD_SIZE);
+    const WIN_LINE_COLS = new Int8Array(MAX_BOARD_SIZE);
+    let winLineLen = 0;
+
+    // Pre-allocated lookup table for numbers (00-99)
+    const PAD2 = [
+      '00','01','02','03','04','05','06','07','08','09',
+      '10','11','12','13','14','15','16','17','18','19',
+      '20','21','22','23','24','25','26','27','28','29',
+      '30','31','32','33','34','35','36','37','38','39',
+      '40','41','42','43','44','45','46','47','48','49',
+      '50','51','52','53','54','55','56','57','58','59',
+      '60','61','62','63','64','65','66','67','68','69',
+      '70','71','72','73','74','75','76','77','78','79',
+      '80','81','82','83','84','85','86','87','88','89',
+      '90','91','92','93','94','95','96','97','98','99'
+    ];
+
+    // Pre-allocated move strings up to 361
+    const MOVE_STRINGS = new Array(MAX_CELLS + 1);
+    for (let s = 0; s <= MAX_CELLS; s++) {
+      MOVE_STRINGS[s] = 'Move #' + s;
+    }
+
+    // Canvas & Geometry
+    const canvas = document.getElementById('game-canvas');
+    const ctx = canvas.getContext('2d', { alpha: false });
+    const boardContainer = document.getElementById('board-container');
+
+    let _canvasWidth = 0;
+    let _canvasHeight = 0;
+    let _dpr = 1;
+
+    let _boardX = 0;
+    let _boardY = 0;
+    let _boardDim = 0;
+    let _cellSize = 0;
+    let _boardMargin = 0;
+
+    let _hoverR = -1;
+    let _hoverC = -1;
+    let _lastMoveR = -1;
+    let _lastMoveC = -1;
+
+    // HUD dirty-checking cache
+    let _lastRenderedPlayer = -1;
+    let _lastRenderedWinner = -1;
+    let _lastRenderedMoveCount = -1;
+    let _lastRenderedMode = -1;
+    let _lastRenderedOpponent = -1;
+    let _lastRenderedSize = -1;
+    let _lastRenderedRule = -1;
+    let _lastRenderedTurnMode = -1;
+    let _lastRenderedTurnOpponent = -1;
+
+    // DOM Elements
+    const turnBadgeIcon = document.getElementById('turn-badge-icon');
+    const turnBadgeText = document.getElementById('turn-badge-text');
+    const moveBadge = document.getElementById('move-badge');
+    const hudPlayAgainBtn = document.getElementById('hud-play-again-btn');
+    const gameOverBanner = document.getElementById('game-over-banner');
+    const gameOverTitle = document.getElementById('game-over-title');
+    const gameOverSub = document.getElementById('game-over-sub');
+    const undoBtn = document.getElementById('undo-btn');
+    const cycleModeIcon = document.getElementById('cycle-mode-icon');
+    const cycleModeLabel = document.getElementById('cycle-mode-label');
+    const cycleOppIcon = document.getElementById('cycle-opp-icon');
+    const cycleOppLabel = document.getElementById('cycle-opp-label');
+    const cycleSizeLabel = document.getElementById('cycle-size-label');
+    const ruleSummaryText = document.getElementById('rule-summary-text');
+    const ruleToggleBtn = document.getElementById('rule-toggle-btn');
+    const audioIcon = document.getElementById('audio-icon');
+    const rulesModal = document.getElementById('rules-modal');
+
+    function dismissGameOver(e) {
+      if (e) e.stopPropagation();
+      if (gameOverBanner) gameOverBanner.style.display = 'none';
+    }
+
+    // =========================================================================
+    // Web Audio Procedural Synthesis (Zero External Media Files)
+    // =========================================================================
+    let audioCtx = null;
+    let noiseBuffer = null;
+
+    function initAudio() {
+      if (audioCtx) return;
+      try {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        audioCtx = new AudioContextClass();
+
+        const sampleRate = audioCtx.sampleRate;
+        noiseBuffer = audioCtx.createBuffer(1, sampleRate, sampleRate);
+        const data = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < sampleRate; i++) {
+          data[i] = Math.random() * 2 - 1;
+        }
+      } catch (e) {}
+    }
+
+    function unlockAudio() {
+      initAudio();
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+    window.addEventListener('pointerdown', unlockAudio, { passive: true, once: true });
+    window.addEventListener('keydown', unlockAudio, { passive: true, once: true });
+    window.addEventListener('touchstart', unlockAudio, { passive: true, once: true });
+
+    function playMoveSound(player, mode) {
+      if (!soundEnabled || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const t = audioCtx.currentTime;
+      if (mode === 0) {
+        // Gomoku: Crisp stone snap on wood
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        filter.type = 'bandpass';
+        filter.frequency.setValueAtTime(player === 1 ? 720 : 860, t);
+        filter.Q.setValueAtTime(4.0, t);
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(player === 1 ? 260 : 320, t);
+        osc.frequency.exponentialRampToValueAtTime(70, t + 0.055);
+
+        gain.gain.setValueAtTime(0.45, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.065);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.07);
+
+        if (noiseBuffer) {
+          const noiseSrc = audioCtx.createBufferSource();
+          noiseSrc.buffer = noiseBuffer;
+          const noiseGain = audioCtx.createGain();
+          const noiseFilter = audioCtx.createBiquadFilter();
+
+          noiseFilter.type = 'highpass';
+          noiseFilter.frequency.setValueAtTime(1400, t);
+
+          noiseGain.gain.setValueAtTime(0.2, t);
+          noiseGain.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+
+          noiseSrc.connect(noiseFilter);
+          noiseFilter.connect(noiseGain);
+          noiseGain.connect(audioCtx.destination);
+
+          noiseSrc.start(t);
+          noiseSrc.stop(t + 0.04);
+        }
+      } else {
+        // Cờ Caro: Crisp stroke marker scratch
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        const filter = audioCtx.createBiquadFilter();
+
+        osc.type = player === 1 ? 'triangle' : 'sine';
+        osc.frequency.setValueAtTime(player === 1 ? 880 : 660, t);
+        osc.frequency.exponentialRampToValueAtTime(player === 1 ? 1400 : 440, t + 0.05);
+
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(2400, t);
+
+        gain.gain.setValueAtTime(0.35, t);
+        gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+
+        osc.connect(filter);
+        filter.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(t);
+        osc.stop(t + 0.065);
+      }
+    }
+
+    function playWinSound() {
+      if (!soundEnabled || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime;
+      const freqs = [523.25, 659.25, 783.99, 1046.50];
+      for (let i = 0; i < 4; i++) {
+        const noteTime = t + i * 0.08;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(freqs[i], noteTime);
+
+        gain.gain.setValueAtTime(0.001, noteTime);
+        gain.gain.linearRampToValueAtTime(0.25, noteTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.001, noteTime + 0.45);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(noteTime);
+        osc.stop(noteTime + 0.48);
+      }
+    }
+
+    function playUndoSound() {
+      if (!soundEnabled || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(440, t);
+      osc.frequency.exponentialRampToValueAtTime(220, t + 0.09);
+      gain.gain.setValueAtTime(0.25, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.1);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.11);
+    }
+
+    function playToggleSound() {
+      if (!soundEnabled || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(620, t);
+      osc.frequency.setValueAtTime(940, t + 0.03);
+      gain.gain.setValueAtTime(0.2, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.065);
+    }
+
+    function playBlockedSound() {
+      if (!soundEnabled || !audioCtx) return;
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      const t = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(110, t);
+      gain.gain.setValueAtTime(0.12, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(t);
+      osc.stop(t + 0.065);
+    }
+
+    // =========================================================================
+    // Core Rules & Zero-Allocation Win Detection
+    // =========================================================================
+    let _dr = 0, _dc = 0;
+    let _startR = 0, _startC = 0;
+    let _endR = 0, _endC = 0;
+    let _curR = 0, _curC = 0;
+    let _count = 0;
+    let _e1R = 0, _e1C = 0, _e2R = 0, _e2C = 0;
+    let _b1 = 0, _b2 = 0, _blockedEnds = 0;
+
+    function checkWinAt(row, col, player) {
+      for (let axis = 0; axis < 4; axis++) {
+        if (axis === 0) { _dr = 0; _dc = 1; }
+        else if (axis === 1) { _dr = 1; _dc = 0; }
+        else if (axis === 2) { _dr = 1; _dc = 1; }
+        else { _dr = 1; _dc = -1; }
+
+        _startR = row;
+        _startC = col;
+        while (true) {
+          _curR = _startR - _dr;
+          _curC = _startC - _dc;
+          if (_curR < 0 || _curR >= currentBoardSize || _curC < 0 || _curC >= currentBoardSize) break;
+          if (BOARD[_curR * currentBoardSize + _curC] !== player) break;
+          _startR = _curR;
+          _startC = _curC;
+        }
+
+        _count = 0;
+        _curR = _startR;
+        _curC = _startC;
+        while (true) {
+          if (_curR < 0 || _curR >= currentBoardSize || _curC < 0 || _curC >= currentBoardSize) break;
+          if (BOARD[_curR * currentBoardSize + _curC] !== player) break;
+          _count++;
+          _endR = _curR;
+          _endC = _curC;
+          _curR += _dr;
+          _curC += _dc;
+        }
+
+        _e1R = _startR - _dr;
+        _e1C = _startC - _dc;
+        _e2R = _endR + _dr;
+        _e2C = _endC + _dc;
+
+        let isWinningSequence = false;
+
+        if (rulePreset === 0) {
+          // Freestyle Gomoku: 5 or more in a row wins unconditionally
+          if (_count >= 5) {
+            isWinningSequence = true;
+          }
+        } else if (rulePreset === 1) {
+          // Standard Gomoku (Exact 5): Exactly 5 in a row wins. Overlines (6+) do not count as a win.
+          if (_count === 5) {
+            isWinningSequence = true;
+          }
+        } else if (rulePreset === 2) {
+          // Cờ Caro Classic (Luật chặn 2 đầu):
+          // 6 or more in a row always contains an unblocked 5-in-a-row -> wins.
+          // Exactly 5 in a row wins unless blocked at BOTH ends by opponent pieces.
+          if (_count >= 6) {
+            isWinningSequence = true;
+          } else if (_count === 5) {
+            let oppBlocked1 = false;
+            let oppBlocked2 = false;
+            const opp = player === 1 ? 2 : 1;
+
+            if (_e1R >= 0 && _e1R < currentBoardSize && _e1C >= 0 && _e1C < currentBoardSize) {
+              if (BOARD[_e1R * currentBoardSize + _e1C] === opp) oppBlocked1 = true;
+            }
+            if (_e2R >= 0 && _e2R < currentBoardSize && _e2C >= 0 && _e2C < currentBoardSize) {
+              if (BOARD[_e2R * currentBoardSize + _e2C] === opp) oppBlocked2 = true;
+            }
+
+            if (!(oppBlocked1 && oppBlocked2)) {
+              isWinningSequence = true;
+            }
+          }
+        } else {
+          // Rule Preset 3: Open-Ended Gomoku (4 Trắng 5 Đen)
+          // Any 5 in a row wins immediately; 4 in a row wins if BOTH ends are open (unhindered).
+          if (_count >= 5) {
+            isWinningSequence = true;
+          } else if (_count === 4) {
+            const e1Open = (_e1R >= 0 && _e1R < currentBoardSize && _e1C >= 0 && _e1C < currentBoardSize && BOARD[_e1R * currentBoardSize + _e1C] === 0);
+            const e2Open = (_e2R >= 0 && _e2R < currentBoardSize && _e2C >= 0 && _e2C < currentBoardSize && BOARD[_e2R * currentBoardSize + _e2C] === 0);
+            if (e1Open && e2Open) {
+              isWinningSequence = true;
+            }
+          }
+        }
+
+        if (isWinningSequence) {
+          winLineLen = _count > MAX_BOARD_SIZE ? MAX_BOARD_SIZE : _count;
+          for (let k = 0; k < winLineLen; k++) {
+            WIN_LINE_ROWS[k] = _startR + k * _dr;
+            WIN_LINE_COLS[k] = _startC + k * _dc;
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // =========================================================================
+    // Heuristic AI Opponent (Zero-Allocation Hot Path)
+    // Evaluates attack and defense threats across all 4 axes for candidate cells
+    // =========================================================================
+    const AI_SCORES = new Int32Array(MAX_CELLS);
+    let _aiBestScore = -99999999;
+    let _aiBestRow = -1;
+    let _aiBestCol = -1;
+
+    function evaluatePositionScore(r, c, player) {
+      let totalScore = 0;
+      const opp = player === 1 ? 2 : 1;
+
+      // Distance from center bonus
+      const center = (currentBoardSize - 1) * 0.5;
+      const dist = Math.abs(r - center) + Math.abs(c - center);
+      totalScore += Math.max(0, Math.round((currentBoardSize - dist) * 2));
+
+      // Check pattern along 4 directions for both Attack (player) and Defense (opp)
+      for (let pIdx = 0; pIdx < 2; pIdx++) {
+        const evalPlayer = pIdx === 0 ? player : opp;
+        const multiplier = pIdx === 0 ? 1.0 : 0.95; // slightly prioritize attacking wins
+
+        for (let axis = 0; axis < 4; axis++) {
+          let dr = 0, dc = 0;
+          if (axis === 0) { dr = 0; dc = 1; }
+          else if (axis === 1) { dr = 1; dc = 0; }
+          else if (axis === 2) { dr = 1; dc = 1; }
+          else { dr = 1; dc = -1; }
+
+          let count = 1;
+          let openEnds = 0;
+
+          // Forward direction
+          let step = 1;
+          while (true) {
+            const nr = r + step * dr;
+            const nc = c + step * dc;
+            if (nr < 0 || nr >= currentBoardSize || nc < 0 || nc >= currentBoardSize) break;
+            if (BOARD[nr * currentBoardSize + nc] === evalPlayer) {
+              count++;
+              step++;
+            } else {
+              if (BOARD[nr * currentBoardSize + nc] === 0) openEnds++;
+              break;
+            }
+          }
+
+          // Backward direction
+          step = 1;
+          while (true) {
+            const nr = r - step * dr;
+            const nc = c - step * dc;
+            if (nr < 0 || nr >= currentBoardSize || nc < 0 || nc >= currentBoardSize) break;
+            if (BOARD[nr * currentBoardSize + nc] === evalPlayer) {
+              count++;
+              step++;
+            } else {
+              if (BOARD[nr * currentBoardSize + nc] === 0) openEnds++;
+              break;
+            }
+          }
+
+          // Pattern scoring tailored to rule presets
+          if (count >= 5) {
+            if (rulePreset === 1) {
+              // Standard Gomoku: Exactly 5 is a win, overlines (6+) are not
+              if (count === 5) totalScore += Math.round(10000000 * multiplier);
+              else totalScore += Math.round(500 * multiplier);
+            } else {
+              totalScore += Math.round(10000000 * multiplier);
+            }
+          } else if (count === 4) {
+            if (rulePreset === 3 && openEnds === 2) {
+              totalScore += Math.round(10000000 * multiplier); // Immediate win under Open-Ended Gomoku
+            } else if (openEnds === 2) {
+              totalScore += Math.round(500000 * multiplier);
+            } else if (openEnds === 1) {
+              totalScore += Math.round(80000 * multiplier);
+            }
+          } else if (count === 3) {
+            if (openEnds === 2) totalScore += Math.round(15000 * multiplier);
+            else if (openEnds === 1) totalScore += Math.round(1500 * multiplier);
+          } else if (count === 2) {
+            if (openEnds === 2) totalScore += Math.round(500 * multiplier);
+            else if (openEnds === 1) totalScore += Math.round(50 * multiplier);
+          }
+        }
+      }
+
+      return totalScore;
+    }
+
+    function triggerAIMove() {
+      if (winner !== 0 || moveCount === totalCells || currentPlayer !== 2) return;
+      aiThinking = true;
+
+      // Evaluate candidates in 1 tick (zero heap allocation)
+      _aiBestScore = -99999999;
+      _aiBestRow = -1;
+      _aiBestCol = -1;
+
+      // If board is empty, play center
+      if (moveCount === 0) {
+        _aiBestRow = Math.floor(currentBoardSize / 2);
+        _aiBestCol = Math.floor(currentBoardSize / 2);
+      } else {
+        for (let r = 0; r < currentBoardSize; r++) {
+          for (let c = 0; c < currentBoardSize; c++) {
+            const idx = r * currentBoardSize + c;
+            if (BOARD[idx] !== 0) continue;
+
+            // Fast proximity check: candidate must be within 2 cells of an existing stone
+            let nearStone = false;
+            for (let dr = -2; dr <= 2; dr++) {
+              for (let dc = -2; dc <= 2; dc++) {
+                const nr = r + dr;
+                const nc = c + dc;
+                if (nr >= 0 && nr < currentBoardSize && nc >= 0 && nc < currentBoardSize) {
+                  if (BOARD[nr * currentBoardSize + nc] !== 0) {
+                    nearStone = true;
+                    break;
+                  }
+                }
+              }
+              if (nearStone) break;
+            }
+            if (!nearStone && moveCount > 0) continue;
+
+            const score = evaluatePositionScore(r, c, 2);
+            AI_SCORES[idx] = score;
+
+            if (score > _aiBestScore) {
+              _aiBestScore = score;
+              _aiBestRow = r;
+              _aiBestCol = c;
+            }
+          }
+        }
+      }
+
+      // Execute move with a natural, humanized deliberation delay (100ms - 1000ms)
+      if (_aiTimeoutId) {
+        clearTimeout(_aiTimeoutId);
+        _aiTimeoutId = null;
+      }
+      const aiDelay = Math.floor(Math.random() * 700) + 200; // 200ms to 900ms naturally within 100-1000ms range
+      _aiTimeoutId = setTimeout(() => {
+        _aiTimeoutId = null;
+        aiThinking = false;
+        if (_aiBestRow >= 0 && _aiBestCol >= 0 && currentPlayer === 2 && winner === 0) {
+          executeMove(_aiBestRow, _aiBestCol);
+        }
+      }, aiDelay);
+    }
+
+    // =========================================================================
+    // Move Execution & Game Controls
+    // =========================================================================
+    function executeMove(r, c) {
+      if (winner !== 0 || r < 0 || r >= currentBoardSize || c < 0 || c >= currentBoardSize) return;
+      const idx = r * currentBoardSize + c;
+      if (BOARD[idx] !== 0) return;
+
+      BOARD[idx] = currentPlayer;
+      MOVE_HISTORY_ROW[moveCount] = r;
+      MOVE_HISTORY_COL[moveCount] = c;
+      moveCount++;
+      _lastMoveR = r;
+      _lastMoveC = c;
+
+      playMoveSound(currentPlayer, visualMode);
+
+      if (checkWinAt(r, c, currentPlayer)) {
+        winner = currentPlayer;
+        playWinSound();
+      } else if (moveCount === totalCells) {
+        winner = 3; // Draw
+      } else {
+        currentPlayer = currentPlayer === 1 ? 2 : 1;
+      }
+
+      updateHUD();
+
+      // If playing vs AI and it is AI's turn
+      if (opponentMode === 1 && currentPlayer === 2 && winner === 0) {
+        triggerAIMove();
+      }
+    }
+
+    function makeMove(r, c) {
+      if (winner !== 0) {
+        handleReset();
+        return;
+      }
+      if (opponentMode === 1 && currentPlayer === 2) {
+        // AI is thinking
+        return;
+      }
+      const idx = r * currentBoardSize + c;
+      if (BOARD[idx] !== 0) {
+        playBlockedSound();
+        return;
+      }
+      executeMove(r, c);
+    }
+
+    function handleUndo() {
+      if (moveCount <= 0 || aiThinking) return;
+
+      if (_aiTimeoutId) {
+        clearTimeout(_aiTimeoutId);
+        _aiTimeoutId = null;
+      }
+      aiThinking = false;
+
+      // In Vs AI mode, undo two moves (player and computer) so player stays player
+      const steps = (opponentMode === 1 && moveCount >= 2 && currentPlayer === 1) ? 2 : 1;
+
+      for (let s = 0; s < steps; s++) {
+        if (moveCount <= 0) break;
+        moveCount--;
+        const r = MOVE_HISTORY_ROW[moveCount];
+        const c = MOVE_HISTORY_COL[moveCount];
+        BOARD[r * currentBoardSize + c] = 0;
+      }
+
+      winner = 0;
+      winLineLen = 0;
+
+      if (moveCount > 0) {
+        _lastMoveR = MOVE_HISTORY_ROW[moveCount - 1];
+        _lastMoveC = MOVE_HISTORY_COL[moveCount - 1];
+        currentPlayer = BOARD[_lastMoveR * currentBoardSize + _lastMoveC] === 1 ? 2 : 1;
+      } else {
+        _lastMoveR = -1;
+        _lastMoveC = -1;
+        currentPlayer = 1;
+      }
+
+      playUndoSound();
+      updateHUD();
+    }
+
+    function handleReset() {
+      if (_aiTimeoutId) {
+        clearTimeout(_aiTimeoutId);
+        _aiTimeoutId = null;
+      }
+      for (let i = 0; i < totalCells; i++) {
+        BOARD[i] = 0;
+      }
+      moveCount = 0;
+      currentPlayer = 1;
+      winner = 0;
+      winLineLen = 0;
+      _lastMoveR = -1;
+      _lastMoveC = -1;
+      _hoverR = -1;
+      _hoverC = -1;
+      aiThinking = false;
+
+      playToggleSound();
+      updateHUD();
+    }
+
+    function setVisualMode(mode) {
+      if (visualMode === mode) return;
+      visualMode = mode;
+      playToggleSound();
+      updateCanvasSize();
+      updateHUD();
+    }
+
+    function cycleVisualMode() {
+      setVisualMode(visualMode === 0 ? 1 : 0);
+    }
+
+    function setOpponentMode(mode) {
+      if (opponentMode === mode) return;
+      opponentMode = mode;
+      handleReset();
+    }
+
+    function cycleOpponentMode() {
+      setOpponentMode(opponentMode === 0 ? 1 : 0);
+    }
+
+    function setBoardSize(size) {
+      if (currentBoardSize === size) return;
+      currentBoardSize = size;
+      totalCells = size * size;
+      handleReset();
+      updateCanvasSize();
+      updateHUD();
+    }
+
+    function cycleBoardSize() {
+      if (currentBoardSize === 11) setBoardSize(15);
+      else if (currentBoardSize === 15) setBoardSize(19);
+      else setBoardSize(11);
+    }
+
+    function setRulePreset(preset) {
+      rulePreset = preset;
+      playToggleSound();
+      updateHUD();
+    }
+
+    function cycleRulePreset() {
+      setRulePreset((rulePreset + 1) % 4);
+    }
+
+    function toggleAudio() {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled) {
+        initAudio();
+        audioIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>';
+      } else {
+        audioIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line></svg>';
+      }
+      playToggleSound();
+    }
+
+    function toggleRulesModal(show) {
+      if (show) {
+        rulesModal.classList.add('open');
+      } else {
+        rulesModal.classList.remove('open');
+      }
+    }
+
+    function onModalOverlayClick(e) {
+      if (e.target === rulesModal) {
+        toggleRulesModal(false);
+      }
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      const key = e.key.toUpperCase();
+      if (key === 'U' || (e.ctrlKey && key === 'Z')) {
+        handleUndo();
+      } else if (key === 'R' || (key === 'ENTER' && winner !== 0) || (key === ' ' && winner !== 0)) {
+        handleReset();
+      } else if (key === 'M') {
+        cycleVisualMode();
+      } else if (key === 'S') {
+        toggleAudio();
+      } else if (key === '?' || key === 'H') {
+        toggleRulesModal(!rulesModal.classList.contains('open'));
+      } else if (e.key === 'Escape') {
+        toggleRulesModal(false);
+      }
+    });
+
+    // =========================================================================
+    // Zero-Layout-Thrashing Dirty-Checked HUD Pipeline
+    // =========================================================================
+    function updateHUD() {
+      undoBtn.disabled = moveCount === 0 || aiThinking;
+
+      // Mode Cycle Pill
+      if (_lastRenderedMode !== visualMode) {
+        _lastRenderedMode = visualMode;
+        if (cycleModeIcon && cycleModeLabel) {
+          cycleModeIcon.innerHTML = visualMode === 0 ? '&#9679;' : '&#10005;';
+          cycleModeLabel.textContent = visualMode === 0 ? 'Gomoku' : 'C\u1edd Caro';
+        }
+      }
+
+      // Opponent Cycle Pill
+      if (_lastRenderedOpponent !== opponentMode) {
+        _lastRenderedOpponent = opponentMode;
+        if (cycleOppIcon && cycleOppLabel) {
+          cycleOppIcon.innerHTML = opponentMode === 0
+            ? '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M22 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>'
+            : '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>';
+          cycleOppLabel.textContent = opponentMode === 0 ? '2 Players' : 'Computer';
+        }
+      }
+
+      // Board Size Cycle Pill
+      if (_lastRenderedSize !== currentBoardSize) {
+        _lastRenderedSize = currentBoardSize;
+        if (cycleSizeLabel) {
+          cycleSizeLabel.innerHTML = currentBoardSize + '&times;' + currentBoardSize;
+        }
+      }
+
+      // Rule Preset Text & Tooltip
+      if (_lastRenderedRule !== rulePreset) {
+        _lastRenderedRule = rulePreset;
+        if (ruleSummaryText) {
+          ruleSummaryText.textContent = RULE_NAMES[rulePreset];
+        }
+        if (ruleToggleBtn) {
+          ruleToggleBtn.setAttribute('data-tooltip', RULE_SUMMARIES[rulePreset]);
+          updateActiveTooltip(ruleToggleBtn, RULE_SUMMARIES[rulePreset]);
+        }
+        const radios = document.getElementsByName('rule-choice');
+        for (let r = 0; r < radios.length; r++) {
+          const isSelected = parseInt(radios[r].value) === rulePreset;
+          radios[r].checked = isSelected;
+          const parentItem = radios[r].closest('.rule-option-item');
+          if (parentItem) {
+            parentItem.classList.toggle('active', isSelected);
+          }
+        }
+      }
+
+      // Move counter
+      if (_lastRenderedMoveCount !== moveCount) {
+        _lastRenderedMoveCount = moveCount;
+        moveBadge.textContent = MOVE_STRINGS[moveCount] || ('Move #' + moveCount);
+      }
+
+      // Turn & Status indicator & Game Over controls
+      if (_lastRenderedPlayer !== currentPlayer || _lastRenderedWinner !== winner || _lastRenderedTurnMode !== visualMode || _lastRenderedTurnOpponent !== opponentMode) {
+        _lastRenderedPlayer = currentPlayer;
+        _lastRenderedWinner = winner;
+        _lastRenderedTurnMode = visualMode;
+        _lastRenderedTurnOpponent = opponentMode;
+
+        if (winner === 0) {
+          hudPlayAgainBtn.style.display = 'none';
+          gameOverBanner.style.display = 'none';
+          turnBadgeIcon.style.display = 'inline-flex';
+          turnBadgeText.className = 'turn-title';
+
+          if (visualMode === 0) {
+            turnBadgeIcon.className = currentPlayer === 1 ? 'piece-preview-badge gomoku-p1' : 'piece-preview-badge gomoku-p2';
+            turnBadgeIcon.textContent = '';
+            turnBadgeText.textContent = opponentMode === 1
+              ? (currentPlayer === 1 ? "Your Turn (Black)" : "Computer Thinking (White)...")
+              : (currentPlayer === 1 ? "Black's Turn" : "White's Turn");
+          } else {
+            turnBadgeIcon.className = currentPlayer === 1 ? 'piece-preview-badge caro-p1' : 'piece-preview-badge caro-p2';
+            turnBadgeIcon.textContent = currentPlayer === 1 ? 'X' : 'O';
+            turnBadgeText.textContent = opponentMode === 1
+              ? (currentPlayer === 1 ? "Your Turn (X)" : "Computer Thinking (O)...")
+              : (currentPlayer === 1 ? "Player 1 (X)" : "Player 2 (O)");
+          }
+        } else if (winner === 1) {
+          hudPlayAgainBtn.style.display = 'inline-flex';
+          gameOverBanner.style.display = 'flex';
+          turnBadgeIcon.style.display = 'inline-flex';
+          turnBadgeIcon.className = visualMode === 0 ? 'piece-preview-badge gomoku-p1' : 'piece-preview-badge caro-p1';
+          turnBadgeIcon.textContent = visualMode === 0 ? '' : 'X';
+          turnBadgeText.className = 'turn-title win-p1';
+
+          const winMsg = opponentMode === 1
+            ? 'You Win!'
+            : (visualMode === 0 ? 'Black Wins!' : 'Player 1 (X) Wins!');
+          turnBadgeText.textContent = winMsg;
+          gameOverTitle.textContent = winMsg;
+          gameOverSub.textContent = (MOVE_STRINGS[moveCount] || ('Move #' + moveCount)) + ' • ' + RULE_NAMES[rulePreset];
+        } else if (winner === 2) {
+          hudPlayAgainBtn.style.display = 'inline-flex';
+          gameOverBanner.style.display = 'flex';
+          turnBadgeIcon.style.display = 'inline-flex';
+          turnBadgeIcon.className = visualMode === 0 ? 'piece-preview-badge gomoku-p2' : 'piece-preview-badge caro-p2';
+          turnBadgeIcon.textContent = visualMode === 0 ? '' : 'O';
+          turnBadgeText.className = 'turn-title win-p2';
+
+          const winMsg = opponentMode === 1
+            ? 'Computer Wins!'
+            : (visualMode === 0 ? 'White Wins!' : 'Player 2 (O) Wins!');
+          turnBadgeText.textContent = winMsg;
+          gameOverTitle.textContent = winMsg;
+          gameOverSub.textContent = (MOVE_STRINGS[moveCount] || ('Move #' + moveCount)) + ' • ' + RULE_NAMES[rulePreset];
+        } else if (winner === 3) {
+          hudPlayAgainBtn.style.display = 'inline-flex';
+          gameOverBanner.style.display = 'flex';
+          turnBadgeIcon.style.display = 'none';
+          turnBadgeText.className = 'turn-title draw';
+          turnBadgeText.textContent = 'Draw Game!';
+          gameOverTitle.textContent = 'Draw Game!';
+          gameOverSub.textContent = 'Board Full • No Winner';
+        }
+      }
+    }
+
+    // =========================================================================
+    // Canvas Sizing, High-DPI Scaling & Geometry Cache
+    // =========================================================================
+    function updateCanvasSize() {
+      const rect = boardContainer.getBoundingClientRect();
+      _dpr = window.devicePixelRatio || 1;
+      _canvasWidth = Math.round(rect.width * _dpr);
+      _canvasHeight = Math.round(rect.height * _dpr);
+
+      if (canvas.width !== _canvasWidth || canvas.height !== _canvasHeight) {
+        canvas.width = _canvasWidth;
+        canvas.height = _canvasHeight;
+      }
+
+      const minDim = Math.min(rect.width, rect.height);
+      _boardMargin = Math.max(16, Math.round(minDim * 0.04));
+      _boardDim = minDim - _boardMargin * 2;
+      _cellSize = _boardDim / (visualMode === 0 ? (currentBoardSize - 1) : currentBoardSize);
+      _boardX = Math.round((rect.width - _boardDim) * 0.5);
+      _boardY = Math.round((rect.height - _boardDim) * 0.5);
+    }
+
+    window.addEventListener('resize', updateCanvasSize, { passive: true });
+
+    // =========================================================================
+    // Scroll-Proof Pointer Coordinate Translation
+    // Queries client rect directly to eliminate scroll desync bugs
+    // =========================================================================
+    let _calcR = 0, _calcC = 0;
+
+    function getGridCoordinates(clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      const pointerX = clientX - rect.left;
+      const pointerY = clientY - rect.top;
+
+      if (visualMode === 0) {
+        _calcC = Math.round((pointerX - _boardX) / _cellSize);
+        _calcR = Math.round((pointerY - _boardY) / _cellSize);
+      } else {
+        _calcC = Math.floor((pointerX - _boardX) / _cellSize);
+        _calcR = Math.floor((pointerY - _boardY) / _cellSize);
+      }
+
+      if (_calcR >= 0 && _calcR < currentBoardSize && _calcC >= 0 && _calcC < currentBoardSize) {
+        _hoverR = _calcR;
+        _hoverC = _calcC;
+      } else {
+        _hoverR = -1;
+        _hoverC = -1;
+      }
+    }
+
+    canvas.addEventListener('pointermove', (e) => {
+      getGridCoordinates(e.clientX, e.clientY);
+    }, { passive: true });
+
+    canvas.addEventListener('pointerleave', () => {
+      _hoverR = -1;
+      _hoverC = -1;
+    }, { passive: true });
+
+    canvas.addEventListener('pointerdown', (e) => {
+      unlockAudio();
+      if (winner !== 0) {
+        handleReset();
+        return;
+      }
+      getGridCoordinates(e.clientX, e.clientY);
+      if (_hoverR >= 0 && _hoverC >= 0) {
+        makeMove(_hoverR, _hoverC);
+      }
+    });
+
+    // =========================================================================
+    // Canvas 2D Rendering Engine (Zero-Allocation Render Tick)
+    // Refined Win Highlight Beam & Ethereal Glowing Halos
+    // =========================================================================
+    let _renderX = 0, _renderY = 0;
+    let _stoneRadius = 0;
+    let _animPulse = 0;
+
+    function render(time) {
+      _animPulse = (Math.sin(time * 0.005) + 1) * 0.5;
+
+      const rect = boardContainer.getBoundingClientRect();
+      ctx.save();
+      ctx.scale(_dpr, _dpr);
+
+      // 1. Board Surface
+      if (visualMode === 0) {
+        // Gomoku: Warm Kaya wood tone with satin sheen
+        const bgGrad = ctx.createLinearGradient(0, 0, rect.width, rect.height);
+        bgGrad.addColorStop(0, '#e5b874');
+        bgGrad.addColorStop(0.5, '#dca963');
+        bgGrad.addColorStop(1, '#cca05b');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, rect.width, rect.height);
+
+        // Subtle organic wood grain lines
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'rgba(120, 75, 25, 0.05)';
+        for (let g = 8; g < rect.height; g += 14) {
+          ctx.beginPath();
+          ctx.moveTo(0, g + Math.sin(g * 0.3) * 2);
+          ctx.lineTo(rect.width, g + Math.cos(g * 0.2) * 2);
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#a67c3b';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(1, 1, rect.width - 2, rect.height - 2);
+
+      } else {
+        // Cờ Caro: Modern crisp slate grid surface
+        ctx.fillStyle = '#0f1013';
+        ctx.fillRect(0, 0, rect.width, rect.height);
+        ctx.fillStyle = '#141519';
+        ctx.fillRect(_boardX, _boardY, _boardDim, _boardDim);
+      }
+
+      // 2. Grid Lines & Star Points
+      if (visualMode === 0) {
+        // Gomoku: Intersection grid lines
+        ctx.strokeStyle = '#382414';
+        ctx.lineWidth = 1.2;
+
+        for (let i = 0; i < currentBoardSize; i++) {
+          const pos = _boardX + i * _cellSize;
+          ctx.beginPath();
+          ctx.moveTo(pos, _boardY);
+          ctx.lineTo(pos, _boardY + _boardDim);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(_boardX, _boardY + i * _cellSize);
+          ctx.lineTo(_boardX + _boardDim, _boardY + i * _cellSize);
+          ctx.stroke();
+        }
+
+        // Star points (Hoshi)
+        ctx.fillStyle = '#2d1c0f';
+        const hoshiR = Math.max(3, _cellSize * 0.09);
+
+        if (currentBoardSize === 15) {
+          const pts = [3, 11, 7];
+          for (let pi = 0; pi < 2; pi++) {
+            for (let pj = 0; pj < 2; pj++) {
+              ctx.beginPath();
+              ctx.arc(_boardX + pts[pi] * _cellSize, _boardY + pts[pj] * _cellSize, hoshiR, 0, 6.28318);
+              ctx.fill();
+            }
+          }
+          ctx.beginPath();
+          ctx.arc(_boardX + 7 * _cellSize, _boardY + 7 * _cellSize, hoshiR, 0, 6.28318);
+          ctx.fill();
+        } else if (currentBoardSize === 19) {
+          const pts = [3, 9, 15];
+          for (let pi = 0; pi < 3; pi++) {
+            for (let pj = 0; pj < 3; pj++) {
+              ctx.beginPath();
+              ctx.arc(_boardX + pts[pi] * _cellSize, _boardY + pts[pj] * _cellSize, hoshiR, 0, 6.28318);
+              ctx.fill();
+            }
+          }
+        } else if (currentBoardSize === 11) {
+          ctx.beginPath();
+          ctx.arc(_boardX + 5 * _cellSize, _boardY + 5 * _cellSize, hoshiR, 0, 6.28318);
+          ctx.fill();
+          const pts = [2, 8];
+          for (let pi = 0; pi < 2; pi++) {
+            for (let pj = 0; pj < 2; pj++) {
+              ctx.beginPath();
+              ctx.arc(_boardX + pts[pi] * _cellSize, _boardY + pts[pj] * _cellSize, hoshiR, 0, 6.28318);
+              ctx.fill();
+            }
+          }
+        }
+
+      } else {
+        // Cờ Caro: Square cell grid borders
+        ctx.strokeStyle = '#22252c';
+        ctx.lineWidth = 1;
+
+        for (let i = 0; i <= currentBoardSize; i++) {
+          const pos = _boardX + i * _cellSize;
+          ctx.beginPath();
+          ctx.moveTo(pos, _boardY);
+          ctx.lineTo(pos, _boardY + _boardDim);
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.moveTo(_boardX, _boardY + i * _cellSize);
+          ctx.lineTo(_boardX + _boardDim, _boardY + i * _cellSize);
+          ctx.stroke();
+        }
+
+        ctx.strokeStyle = '#323742';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(_boardX, _boardY, _boardDim, _boardDim);
+      }
+
+      // 3. Render Placed Pieces
+      _stoneRadius = _cellSize * (visualMode === 0 ? 0.44 : 0.40);
+
+      for (let r = 0; r < currentBoardSize; r++) {
+        for (let c = 0; c < currentBoardSize; c++) {
+          const piece = BOARD[r * currentBoardSize + c];
+          if (piece === 0) continue;
+
+          if (visualMode === 0) {
+            // Gomoku Mode: Intersections
+            _renderX = _boardX + c * _cellSize;
+            _renderY = _boardY + r * _cellSize;
+
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.beginPath();
+            ctx.arc(_renderX + 2, _renderY + 3, _stoneRadius, 0, 6.28318);
+            ctx.fill();
+
+            if (piece === 1) {
+              const blackGrad = ctx.createRadialGradient(
+                _renderX - _stoneRadius * 0.3, _renderY - _stoneRadius * 0.35, _stoneRadius * 0.08,
+                _renderX, _renderY, _stoneRadius
+              );
+              blackGrad.addColorStop(0, '#5a6270');
+              blackGrad.addColorStop(0.3, '#2a2e37');
+              blackGrad.addColorStop(0.8, '#111317');
+              blackGrad.addColorStop(1, '#050608');
+              ctx.fillStyle = blackGrad;
+              ctx.beginPath();
+              ctx.arc(_renderX, _renderY, _stoneRadius, 0, 6.28318);
+              ctx.fill();
+
+              ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            } else {
+              const whiteGrad = ctx.createRadialGradient(
+                _renderX - _stoneRadius * 0.3, _renderY - _stoneRadius * 0.35, _stoneRadius * 0.08,
+                _renderX, _renderY, _stoneRadius
+              );
+              whiteGrad.addColorStop(0, '#ffffff');
+              whiteGrad.addColorStop(0.5, '#f5f5f7');
+              whiteGrad.addColorStop(0.85, '#dcdfe6');
+              whiteGrad.addColorStop(1, '#b5b9c4');
+              ctx.fillStyle = whiteGrad;
+              ctx.beginPath();
+              ctx.arc(_renderX, _renderY, _stoneRadius, 0, 6.28318);
+              ctx.fill();
+
+              ctx.strokeStyle = 'rgba(0, 0, 0, 0.18)';
+              ctx.lineWidth = 0.8;
+              ctx.stroke();
+            }
+
+          } else {
+            // Cờ Caro Mode: Square Cells
+            _renderX = _boardX + (c + 0.5) * _cellSize;
+            _renderY = _boardY + (r + 0.5) * _cellSize;
+
+            if (piece === 1) {
+              const markHalf = _cellSize * 0.30;
+              ctx.strokeStyle = '#f43f5e';
+              ctx.lineWidth = Math.max(2.5, _cellSize * 0.11);
+              ctx.lineCap = 'round';
+
+              ctx.beginPath();
+              ctx.moveTo(_renderX - markHalf, _renderY - markHalf);
+              ctx.lineTo(_renderX + markHalf, _renderY + markHalf);
+              ctx.stroke();
+
+              ctx.beginPath();
+              ctx.moveTo(_renderX + markHalf, _renderY - markHalf);
+              ctx.lineTo(_renderX - markHalf, _renderY + markHalf);
+              ctx.stroke();
+
+            } else {
+              const markRadius = _cellSize * 0.30;
+              ctx.strokeStyle = '#06b6d4';
+              ctx.lineWidth = Math.max(2.5, _cellSize * 0.11);
+
+              ctx.beginPath();
+              ctx.arc(_renderX, _renderY, markRadius, 0, 6.28318);
+              ctx.stroke();
+            }
+          }
+
+          // Last move indicator
+          if (r === _lastMoveR && c === _lastMoveC) {
+            ctx.save();
+            if (visualMode === 0) {
+              ctx.fillStyle = piece === 1 ? '#f43f5e' : '#e11d48';
+              ctx.beginPath();
+              ctx.arc(_renderX, _renderY, _stoneRadius * 0.22, 0, 6.28318);
+              ctx.fill();
+            } else {
+              const cellX = _boardX + c * _cellSize;
+              const cellY = _boardY + r * _cellSize;
+              ctx.strokeStyle = piece === 1 ? 'rgba(244, 63, 94, 0.5)' : 'rgba(6, 182, 212, 0.5)';
+              ctx.lineWidth = 1.5;
+              ctx.strokeRect(cellX + 2, cellY + 2, _cellSize - 4, _cellSize - 4);
+            }
+            ctx.restore();
+          }
+        }
+      }
+
+      // 4. Hover Ghost Preview
+      if (winner === 0 && _hoverR >= 0 && _hoverC >= 0) {
+        if (BOARD[_hoverR * currentBoardSize + _hoverC] === 0) {
+          if (visualMode === 0) {
+            _renderX = _boardX + _hoverC * _cellSize;
+            _renderY = _boardY + _hoverR * _cellSize;
+            ctx.fillStyle = currentPlayer === 1 ? 'rgba(0, 0, 0, 0.35)' : 'rgba(255, 255, 255, 0.45)';
+            ctx.beginPath();
+            ctx.arc(_renderX, _renderY, _stoneRadius, 0, 6.28318);
+            ctx.fill();
+          } else {
+            _renderX = _boardX + (_hoverC + 0.5) * _cellSize;
+            _renderY = _boardY + (_hoverR + 0.5) * _cellSize;
+            const markHalf = _cellSize * 0.28;
+            ctx.lineWidth = Math.max(2, _cellSize * 0.08);
+            ctx.lineCap = 'round';
+
+            if (currentPlayer === 1) {
+              ctx.strokeStyle = 'rgba(244, 63, 94, 0.35)';
+              ctx.beginPath();
+              ctx.moveTo(_renderX - markHalf, _renderY - markHalf);
+              ctx.lineTo(_renderX + markHalf, _renderY + markHalf);
+              ctx.moveTo(_renderX + markHalf, _renderY - markHalf);
+              ctx.lineTo(_renderX - markHalf, _renderY + markHalf);
+              ctx.stroke();
+            } else {
+              ctx.strokeStyle = 'rgba(6, 182, 212, 0.35)';
+              ctx.beginPath();
+              ctx.arc(_renderX, _renderY, markHalf, 0, 6.28318);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      // 5. Winning Line Highlighting (Minimalist, High-Contrast Rings & Winning Line)
+      if (winner !== 0 && winner !== 3 && winLineLen >= 4) {
+        ctx.save();
+        const startX = visualMode === 0
+          ? _boardX + WIN_LINE_COLS[0] * _cellSize
+          : _boardX + (WIN_LINE_COLS[0] + 0.5) * _cellSize;
+        const startY = visualMode === 0
+          ? _boardY + WIN_LINE_ROWS[0] * _cellSize
+          : _boardY + (WIN_LINE_ROWS[0] + 0.5) * _cellSize;
+
+        const endX = visualMode === 0
+          ? _boardX + WIN_LINE_COLS[winLineLen - 1] * _cellSize
+          : _boardX + (WIN_LINE_COLS[winLineLen - 1] + 0.5) * _cellSize;
+        const endY = visualMode === 0
+          ? _boardY + WIN_LINE_ROWS[winLineLen - 1] * _cellSize
+          : _boardY + (WIN_LINE_ROWS[winLineLen - 1] + 0.5) * _cellSize;
+
+        // Choose high-contrast accent colors
+        // Gomoku: Electric Azure (#0ea5e9 / rgba(14, 165, 233)) — high contrast against kaya wood & both stones
+        // Caro: Crimson (#f43f5e) for X / Azure (#06b6d4) for O
+        const ringBaseColor = visualMode === 0
+          ? 'rgba(14, 165, 233,'
+          : (winner === 1 ? 'rgba(244, 63, 94,' : 'rgba(6, 182, 212,');
+
+        const lineStrokeColor = visualMode === 0
+          ? '#38bdf8'
+          : (winner === 1 ? '#fb7185' : '#38bdf8');
+
+        // Step A: Draw animated breathing halo rings underneath the line
+        const radius = visualMode === 0 ? _stoneRadius : (_cellSize * 0.38);
+        ctx.lineWidth = Math.max(2.2, _cellSize * 0.07);
+        for (let w = 0; w < winLineLen; w++) {
+          const wx = visualMode === 0
+            ? _boardX + WIN_LINE_COLS[w] * _cellSize
+            : _boardX + (WIN_LINE_COLS[w] + 0.5) * _cellSize;
+          const wy = visualMode === 0
+            ? _boardY + WIN_LINE_ROWS[w] * _cellSize
+            : _boardY + (WIN_LINE_ROWS[w] + 0.5) * _cellSize;
+
+          ctx.strokeStyle = `${ringBaseColor} ${0.75 + _animPulse * 0.25})`;
+          ctx.beginPath();
+          ctx.arc(wx, wy, radius * (1.04 + _animPulse * 0.12), 0, 6.28318);
+          ctx.stroke();
+        }
+
+        // Step B: Draw winning line indicator ON TOP of the rings so it is never obscured
+        // Subtle soft ambient glow
+        ctx.strokeStyle = `${ringBaseColor} ${0.35 + _animPulse * 0.2})`;
+        ctx.lineWidth = Math.max(5.5, _cellSize * 0.2);
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+
+        // Focused crisp core
+        ctx.strokeStyle = lineStrokeColor;
+        ctx.lineWidth = Math.max(2.4, _cellSize * 0.08);
+        ctx.beginPath();
+        ctx.moveTo(startX, startY);
+        ctx.lineTo(endX, endY);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      ctx.restore();
+      requestAnimationFrame(render);
+    }
+
+    // =========================================================================
+    // Google UI / AI Studio Precision Tooltip Controller
+    // 160ms initial delay, 0ms warm-up switch, viewport auto-docking, glitch-free
+    // =========================================================================
+    const appTooltip = document.getElementById('app-tooltip');
+    let _tooltipTimer = null;
+    let _lastTooltipHideTime = 0;
+    let _currentTooltipTarget = null;
+
+    function positionTooltip(target) {
+      if (!appTooltip || !target) return;
+      const rect = target.getBoundingClientRect();
+
+      // Measure unscaled layout dimensions
+      const tipWidth = appTooltip.offsetWidth;
+      const tipHeight = appTooltip.offsetHeight;
+
+      // Horizontal alignment: left-align for the rule name button, center for others
+      let left;
+      if (target.id === 'rule-toggle-btn') {
+        left = rect.left;
+      } else {
+        left = rect.left + (rect.width - tipWidth) * 0.5;
+      }
+      left = Math.max(8, Math.min(window.innerWidth - tipWidth - 8, left));
+
+      // Default position below element; flip above if overflowing bottom
+      let top = rect.bottom + 6;
+      if (top + tipHeight > window.innerHeight - 8) {
+        top = Math.max(8, rect.top - tipHeight - 6);
+      }
+
+      appTooltip.style.left = `${Math.round(left)}px`;
+      appTooltip.style.top = `${Math.round(top)}px`;
+    }
+
+    function showTooltip(target, text, forceImmediate = false) {
+      if (!appTooltip || !text) return;
+      if (_currentTooltipTarget === target && !forceImmediate) {
+        return;
+      }
+
+      _currentTooltipTarget = target;
+      appTooltip.textContent = text;
+
+      const now = performance.now();
+      const isWarm = (now - _lastTooltipHideTime) < 350;
+      const delay = (forceImmediate || isWarm) ? 0 : 160;
+
+      if (_tooltipTimer) {
+        clearTimeout(_tooltipTimer);
+        _tooltipTimer = null;
+      }
+
+      if (delay === 0) {
+        positionTooltip(target);
+        appTooltip.classList.add('visible');
+      } else {
+        appTooltip.classList.remove('visible');
+        _tooltipTimer = setTimeout(() => {
+          if (_currentTooltipTarget !== target) return;
+          positionTooltip(target);
+          appTooltip.classList.add('visible');
+        }, delay);
+      }
+    }
+
+    function updateActiveTooltip(target, text) {
+      if (_currentTooltipTarget === target && appTooltip) {
+        appTooltip.textContent = text;
+        positionTooltip(target);
+      }
+    }
+
+    function hideTooltip() {
+      if (_tooltipTimer) {
+        clearTimeout(_tooltipTimer);
+        _tooltipTimer = null;
+      }
+      if (_currentTooltipTarget) {
+        _lastTooltipHideTime = performance.now();
+        _currentTooltipTarget = null;
+      }
+      if (appTooltip) {
+        appTooltip.classList.remove('visible');
+      }
+    }
+
+    document.addEventListener('mouseover', (e) => {
+      const el = e.target.closest('[data-tooltip], [title]');
+      if (el) {
+        let text = el.getAttribute('data-tooltip');
+        if (!text && el.title) {
+          text = el.title;
+          el.setAttribute('data-tooltip', text);
+          el.removeAttribute('title');
+        }
+        if (text) showTooltip(el, text);
+      }
+    }, { passive: true });
+
+    document.addEventListener('mouseout', (e) => {
+      const el = e.target.closest('[data-tooltip], [title]');
+      if (el && el === _currentTooltipTarget) {
+        if (!e.relatedTarget || !el.contains(e.relatedTarget)) {
+          hideTooltip();
+        }
+      }
+    }, { passive: true });
+
+    document.addEventListener('pointerdown', (e) => {
+      const el = e.target.closest('[data-tooltip], [title]');
+      if (!el || el !== _currentTooltipTarget) {
+        hideTooltip();
+      }
+    }, { passive: true });
+
+    window.addEventListener('scroll', hideTooltip, { passive: true });
+    window.addEventListener('resize', () => {
+      if (_currentTooltipTarget) positionTooltip(_currentTooltipTarget);
+    }, { passive: true });
+
+    // =========================================================================
+    // System Clock (Zero-Allocation Loop with Pre-Allocated Lookups)
+    // =========================================================================
+    let localTimezoneName = '';
+    try {
+      const parts = new Intl.DateTimeFormat(undefined, { timeZoneName: 'short' }).formatToParts(new Date());
+      const tz = parts.find(p => p.type === 'timeZoneName');
+      localTimezoneName = tz ? tz.value : (Intl.DateTimeFormat().resolvedOptions().timeZone || '');
+    } catch (e) {}
+
+    const footerTimeElem = document.getElementById('footer-time-val');
+    let lastSecond = -1;
+
+    function tickClock() {
+      const now = new Date();
+      const currentSec = now.getSeconds();
+      if (currentSec !== lastSecond) {
+        lastSecond = currentSec;
+        const y = now.getFullYear();
+        const m = PAD2[now.getMonth() + 1];
+        const d = PAD2[now.getDate()];
+        const h = PAD2[now.getHours()];
+        const min = PAD2[now.getMinutes()];
+        const s = PAD2[currentSec];
+        const tz = localTimezoneName ? ' ' + localTimezoneName : '';
+        if (footerTimeElem) {
+          footerTimeElem.textContent = `${y}-${m}-${d} ${h}:${min}:${s}${tz}`;
+        }
+      }
+      setTimeout(tickClock, 250);
+    }
+
+    // =========================================================================
+    // Boot Initialization
+    // =========================================================================
+    updateCanvasSize();
+    updateHUD();
+    tickClock();
+    requestAnimationFrame(render);
+  </script>
+</body>
+</html>

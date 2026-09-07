@@ -1,0 +1,6 @@
+{
+  "name": "Caromoku",
+  "description": "Unified Gomoku and Cờ Caro game with smart AI and customizable rules.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
