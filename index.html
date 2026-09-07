@@ -59,7 +59,7 @@
       --bar-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
-    html.light-theme, body.light-theme {
+    html.light-theme {
       --bg: #e2e4ea;
       --header-bg: rgba(244, 244, 246, 0.92);
       --card-bg: #ffffff;
@@ -89,27 +89,16 @@
       transition: none !important;
     }
 
-    body, header, main, footer,
-    .hud-bar, .info-bar, .board-wrapper, .modal-card,
-    .nav-cycle-btn, .action-btn, .rule-pill-btn, .key-hint, .footer-clock,
-    .rule-option-item, .feature-item, .brand-title, .turn-title, .clock-val,
-    .move-count-chip, .cycle-btn-val, .cycle-btn-prefix, .cycle-btn-arrow,
-    .btn-svg-icon, .app-tooltip, .modal-overlay, .rule-option-title,
-    .rule-option-desc, .rule-badge, .rule-badge-check, .key-hint kbd,
-    .game-over-banner, .game-over-title, .game-over-sub, .game-over-hint,
-    .rule-rule-box, .rule-box-heading, .feature-name, .feature-sub, .feature-badge,
-    .modal-header, .modal-title, .modal-close-btn, .modal-body, .rule-options-list,
-    .feature-grid, .rule-option-text, .feature-detail {
-      transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                  background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                  color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                  border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    html, body, *, *::before, *::after {
+      transition: background-color 0.15s ease-out,
+                  color 0.15s ease-out,
+                  border-color 0.15s ease-out,
+                  box-shadow 0.15s ease-out;
     }
     html, body {
       width: 100%;
       height: 100%;
-      background: var(--bg);
+      background-color: var(--bg);
       color: var(--text);
       font-family: var(--font-sans);
       overflow-x: hidden;
@@ -121,7 +110,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      background: var(--header-bg);
+      background-color: var(--header-bg);
       backdrop-filter: blur(16px) saturate(180%);
       -webkit-backdrop-filter: blur(16px) saturate(180%);
       border-bottom: 1px solid var(--card-border);
@@ -312,7 +301,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--card-bg);
+      background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 6px 14px;
@@ -468,7 +457,7 @@
       box-shadow: var(--board-wrapper-shadow);
       overflow: hidden;
       touch-action: none;
-      background: var(--board-wrapper-bg);
+      background-color: var(--board-wrapper-bg);
     }
     canvas {
       display: block;
@@ -484,7 +473,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      background: var(--card-bg);
+      background-color: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 8px;
       padding: 8px 14px;
@@ -877,7 +866,7 @@
     }
   </style>
 </head>
-<body class="light-theme">
+<body>
   <header>
     <div class="header-inner">
       <div class="header-left">
@@ -1120,7 +1109,7 @@
 
   <footer>
     <div class="footer-content">
-      <div class="footer-clock" id="footer-clock" data-tooltip="Updated: 2026-09-08 04:06 ICT">
+      <div class="footer-clock" id="footer-clock" data-tooltip="Updated: 2026-09-08 04:20 ICT">
         <span class="footer-clock-dot"></span>
         <span class="clock-label">SYSTEM TIME</span>
         <span class="clock-val" id="footer-time-val">--</span>
@@ -1272,6 +1261,9 @@
     let currentTheme = localStorage.getItem('caromoku_theme') || 'light';
     let _themeProgress = currentTheme === 'light' ? 1.0 : 0.0;
     let _targetThemeProgress = _themeProgress;
+    let _startThemeProgress = _themeProgress;
+    let _themeTransitionStartTime = 0;
+    const THEME_TRANSITION_DURATION = 400; // 0.4s matches CSS transition
 
     function lerpRGB(r1, g1, b1, r2, g2, b2, t) {
       const r = Math.round(r1 + (r2 - r1) * t);
@@ -1282,10 +1274,8 @@
 
     if (currentTheme === 'light') {
       document.documentElement.classList.add('light-theme');
-      document.body.classList.add('light-theme');
     } else {
       document.documentElement.classList.remove('light-theme');
-      document.body.classList.remove('light-theme');
     }
 
     requestAnimationFrame(function() {
@@ -1296,17 +1286,18 @@
 
     function toggleTheme() {
       currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      _startThemeProgress = _themeProgress;
       _targetThemeProgress = currentTheme === 'light' ? 1.0 : 0.0;
+      _themeTransitionStartTime = performance.now();
       localStorage.setItem('caromoku_theme', currentTheme);
+
       if (currentTheme === 'light') {
         document.documentElement.classList.add('light-theme');
-        document.body.classList.add('light-theme');
         if (themeIcon) {
           themeIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
         }
       } else {
         document.documentElement.classList.remove('light-theme');
-        document.body.classList.remove('light-theme');
         if (themeIcon) {
           themeIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
         }
@@ -2186,9 +2177,9 @@
     function render(time) {
       _animPulse = (Math.sin(time * 0.005) + 1) * 0.5;
 
-      // Smooth canvas theme progress interpolation
+      // Fast, responsive canvas theme progress interpolation (matches CSS 0.15s transition)
       if (Math.abs(_themeProgress - _targetThemeProgress) > 0.001) {
-        _themeProgress += (_targetThemeProgress - _themeProgress) * 0.16;
+        _themeProgress += (_targetThemeProgress - _themeProgress) * 0.35;
       } else {
         _themeProgress = _targetThemeProgress;
       }
