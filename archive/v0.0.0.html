@@ -1,12 +1,13 @@
+<!-- EDIT_TIMESTAMP_HANOI: 2026-09-07 19:30:00 ICT -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Caromoku &mdash; Cờ Caro / Gomoku</title>
-  <meta name="description" content="A modern unified Cờ Caro and Gomoku game with smart computer opponent and customizable rules." />
-  <meta property="og:title" content="Caromoku &mdash; Cờ Caro / Gomoku" />
-  <meta property="og:description" content="A modern unified Cờ Caro and Gomoku game with smart computer opponent and customizable rules." />
+  <title>Caromoku &mdash; Gomoku / Cờ Caro</title>
+  <meta name="description" content="A modern unified Gomoku and Cờ Caro game with smart computer opponent and customizable rules." />
+  <meta property="og:title" content="Caromoku &mdash; Gomoku / Cờ Caro" />
+  <meta property="og:description" content="A modern unified Gomoku and Cờ Caro game with smart computer opponent and customizable rules." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -23,13 +24,13 @@
           </div>
           <div class="header-brand-sub-row">
             <span class="brand-subtitle">Cờ Caro / Gomoku</span>
-            <span class="version-tag">v0.0.1</span>
+            <span class="version-tag">v0.0.0</span>
           </div>
         </div>
       </div>
       <div class="nav-actions">
         <!-- Visual Mode Cycle Pill -->
-        <button id="cycle-mode-btn" class="nav-cycle-btn" onclick="cycleVisualMode()" data-tooltip="Toggle Visual Style: Cờ Caro / Gomoku [M]">
+        <button id="cycle-mode-btn" class="nav-cycle-btn" onclick="cycleVisualMode()" data-tooltip="Toggle Visual Style: Gomoku / Cờ Caro [M]">
           <span class="cycle-btn-prefix">Mode:</span>
           <span id="cycle-mode-icon" class="cycle-btn-icon">&#9679;</span>
           <span id="cycle-mode-label" class="cycle-btn-val">Gomoku</span>
@@ -77,21 +78,6 @@
             <svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
               <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
-            </svg>
-          </span>
-        </button>
-        <button id="theme-btn" class="action-btn icon-only" onclick="toggleTheme()" data-tooltip="Toggle Theme [T]">
-          <span id="theme-icon">
-            <svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
             </svg>
           </span>
         </button>
@@ -148,7 +134,6 @@
         <span class="key-hint"><kbd>R</kbd> Reset</span>
         <span class="key-hint"><kbd>M</kbd> Mode</span>
         <span class="key-hint"><kbd>S</kbd> Sound</span>
-        <span class="key-hint"><kbd>T</kbd> Theme</span>
       </div>
     </div>
   </main>
@@ -263,10 +248,14 @@
 
   <footer>
     <div class="footer-content">
-      <div class="footer-clock" id="footer-clock" data-tooltip="Updated: 2026-09-07 22:27 ICT">
+      <div class="footer-clock" id="footer-clock" data-tooltip="Real-time accurate system date &amp; time">
         <span class="footer-clock-dot"></span>
         <span class="clock-label">SYSTEM TIME</span>
         <span class="clock-val" id="footer-time-val">--</span>
+      </div>
+      <div class="footer-meta" id="footer-meta">
+        <span class="pill-label">UPDATED</span>
+        <span class="pill-val" id="app-update-timestamp">2026-09-07 18:55 ICT</span>
       </div>
     </div>
   </footer>
@@ -294,153 +283,6 @@
       --gold: #f59e0b;
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    }
-    body.light-theme {
-      --bg: #f4f4f6;
-      --card-bg: #ffffff;
-      --card-border: #e2e2e8;
-      --card-hover-border: #cbd5e1;
-      --text: #18181b;
-      --text-muted: #52525b;
-      --text-dim: #71717a;
-      --accent: #059669;
-      --accent-dim: rgba(5, 150, 105, 0.12);
-    }
-    body.light-theme header {
-      background: rgba(244, 244, 246, 0.92);
-      border-bottom-color: var(--card-border);
-    }
-    body.light-theme .brand-title {
-      color: #09090b;
-    }
-    body.light-theme .nav-cycle-btn {
-      background: #ffffff;
-      border-color: var(--card-border);
-    }
-    body.light-theme .nav-cycle-btn:hover {
-      background: #f8fafc;
-      border-color: var(--card-hover-border);
-    }
-    body.light-theme .action-btn {
-      background: #ffffff;
-      border-color: var(--card-border);
-      color: #27272a;
-    }
-    body.light-theme .action-btn:hover:not(:disabled) {
-      background: #f8fafc;
-      border-color: var(--card-hover-border);
-      color: #09090b;
-    }
-    body.light-theme .action-btn-primary {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: transparent;
-    }
-    body.light-theme .action-btn-primary:hover:not(:disabled) {
-      background: #047857;
-      color: #ffffff;
-    }
-    body.light-theme .hud-bar,
-    body.light-theme .info-bar {
-      background: #ffffff;
-      border-color: var(--card-border);
-    }
-    body.light-theme .turn-title {
-      color: #09090b;
-    }
-    body.light-theme .move-count-chip {
-      background: #f4f4f6;
-      border-color: var(--card-border);
-      color: #52525b;
-    }
-    body.light-theme .rule-pill-btn {
-      background: #f4f4f6;
-      border-color: var(--card-border);
-      color: #09090b;
-    }
-    body.light-theme .rule-pill-btn:hover {
-      background: #e4e4e7;
-    }
-    body.light-theme .key-hint {
-      background: #f4f4f6;
-      border-color: var(--card-border);
-      color: #52525b;
-    }
-    body.light-theme .key-hint kbd {
-      background: #ffffff;
-      border-color: #d4d4d8;
-      color: #18181b;
-    }
-    body.light-theme .board-wrapper {
-      background: #ffffff;
-      border-color: var(--card-border);
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-    }
-    body.light-theme .modal-card {
-      background: #ffffff;
-      border-color: var(--card-border);
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
-    }
-    body.light-theme .modal-title {
-      color: #09090b;
-    }
-    body.light-theme .rule-rule-box {
-      background: #f8fafc;
-      border-color: var(--card-border);
-    }
-    body.light-theme .rule-box-heading {
-      color: #09090b;
-    }
-    body.light-theme .rule-option-item {
-      background: #ffffff;
-      border-color: var(--card-border);
-    }
-    body.light-theme .rule-option-item:hover {
-      background: #f8fafc;
-      border-color: var(--card-hover-border);
-    }
-    body.light-theme .rule-option-item.active {
-      background: rgba(5, 150, 105, 0.08);
-      border-color: rgba(5, 150, 105, 0.38);
-    }
-    body.light-theme .rule-option-title {
-      color: #09090b;
-    }
-    body.light-theme .feature-item {
-      background: #ffffff;
-      border-color: var(--card-border);
-    }
-    body.light-theme .feature-name {
-      color: #09090b;
-    }
-    body.light-theme .feature-badge {
-      background: #f4f4f6;
-      border-color: var(--card-border);
-      color: #18181b;
-    }
-    body.light-theme .game-over-banner {
-      background: rgba(255, 255, 255, 0.88);
-      border-color: rgba(0, 0, 0, 0.12);
-      box-shadow: 0 24px 60px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05);
-    }
-    body.light-theme .game-over-title {
-      color: #09090b;
-    }
-    body.light-theme footer {
-      background: #f4f4f6;
-      border-top-color: var(--card-border);
-    }
-    body.light-theme .footer-clock {
-      background: #ffffff;
-      border-color: var(--card-border);
-    }
-    body.light-theme .clock-val {
-      color: #09090b;
-    }
-    body.light-theme .app-tooltip {
-      background: #18181b;
-      color: #f4f4f5;
-      border-color: #27272a;
     }
     html, body {
       width: 100%;
@@ -1412,35 +1254,7 @@
     const ruleSummaryText = document.getElementById('rule-summary-text');
     const ruleToggleBtn = document.getElementById('rule-toggle-btn');
     const audioIcon = document.getElementById('audio-icon');
-    const themeIcon = document.getElementById('theme-icon');
     const rulesModal = document.getElementById('rules-modal');
-
-    // Theme state: 'dark' or 'light'
-    let currentTheme = localStorage.getItem('caromoku_theme') || 'dark';
-    if (currentTheme === 'light') {
-      document.body.classList.add('light-theme');
-    }
-
-    function toggleTheme() {
-      currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-      localStorage.setItem('caromoku_theme', currentTheme);
-      if (currentTheme === 'light') {
-        document.body.classList.add('light-theme');
-        if (themeIcon) {
-          themeIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-        }
-      } else {
-        document.body.classList.remove('light-theme');
-        if (themeIcon) {
-          themeIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>';
-        }
-      }
-      playToggleSound();
-    }
-
-    if (currentTheme === 'light' && themeIcon) {
-      themeIcon.innerHTML = '<svg class="btn-svg-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-    }
 
     function dismissGameOver(e) {
       if (e) e.stopPropagation();
@@ -2083,8 +1897,6 @@
         cycleVisualMode();
       } else if (key === 'S') {
         toggleAudio();
-      } else if (key === 'T') {
-        toggleTheme();
       } else if (key === '?' || key === 'H') {
         toggleRulesModal(!rulesModal.classList.contains('open'));
       } else if (e.key === 'Escape') {
@@ -2332,18 +2144,11 @@
         ctx.strokeRect(1, 1, rect.width - 2, rect.height - 2);
 
       } else {
-        // Cờ Caro: Modern crisp slate grid surface in dark mode, or clean notebook graph paper in light mode
-        if (currentTheme === 'light') {
-          ctx.fillStyle = '#f8fafc';
-          ctx.fillRect(0, 0, rect.width, rect.height);
-          ctx.fillStyle = '#ffffff';
-          ctx.fillRect(_boardX, _boardY, _boardDim, _boardDim);
-        } else {
-          ctx.fillStyle = '#0f1013';
-          ctx.fillRect(0, 0, rect.width, rect.height);
-          ctx.fillStyle = '#141519';
-          ctx.fillRect(_boardX, _boardY, _boardDim, _boardDim);
-        }
+        // Cờ Caro: Modern crisp slate grid surface
+        ctx.fillStyle = '#0f1013';
+        ctx.fillRect(0, 0, rect.width, rect.height);
+        ctx.fillStyle = '#141519';
+        ctx.fillRect(_boardX, _boardY, _boardDim, _boardDim);
       }
 
       // 2. Grid Lines & Star Points
@@ -2406,7 +2211,7 @@
 
       } else {
         // Cờ Caro: Square cell grid borders
-        ctx.strokeStyle = currentTheme === 'light' ? '#cbd5e1' : '#22252c';
+        ctx.strokeStyle = '#22252c';
         ctx.lineWidth = 1;
 
         for (let i = 0; i <= currentBoardSize; i++) {
@@ -2422,7 +2227,7 @@
           ctx.stroke();
         }
 
-        ctx.strokeStyle = currentTheme === 'light' ? '#94a3b8' : '#323742';
+        ctx.strokeStyle = '#323742';
         ctx.lineWidth = 2;
         ctx.strokeRect(_boardX, _boardY, _boardDim, _boardDim);
       }
@@ -2488,7 +2293,7 @@
 
             if (piece === 1) {
               const markHalf = _cellSize * 0.30;
-              ctx.strokeStyle = currentTheme === 'light' ? '#e11d48' : '#f43f5e';
+              ctx.strokeStyle = '#f43f5e';
               ctx.lineWidth = Math.max(2.5, _cellSize * 0.11);
               ctx.lineCap = 'round';
 
@@ -2504,7 +2309,7 @@
 
             } else {
               const markRadius = _cellSize * 0.30;
-              ctx.strokeStyle = currentTheme === 'light' ? '#0284c7' : '#06b6d4';
+              ctx.strokeStyle = '#06b6d4';
               ctx.lineWidth = Math.max(2.5, _cellSize * 0.11);
 
               ctx.beginPath();
@@ -2524,9 +2329,7 @@
             } else {
               const cellX = _boardX + c * _cellSize;
               const cellY = _boardY + r * _cellSize;
-              const p1Border = currentTheme === 'light' ? 'rgba(225, 29, 72, 0.6)' : 'rgba(244, 63, 94, 0.5)';
-              const p2Border = currentTheme === 'light' ? 'rgba(2, 132, 199, 0.6)' : 'rgba(6, 182, 212, 0.5)';
-              ctx.strokeStyle = piece === 1 ? p1Border : p2Border;
+              ctx.strokeStyle = piece === 1 ? 'rgba(244, 63, 94, 0.5)' : 'rgba(6, 182, 212, 0.5)';
               ctx.lineWidth = 1.5;
               ctx.strokeRect(cellX + 2, cellY + 2, _cellSize - 4, _cellSize - 4);
             }
