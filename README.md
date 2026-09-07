@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://zzerodesigns.github.io/caromoku/">
-    <img width="1440" height="900" alt="Caromoku Hero" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400220-b6ba5699-7659-4d0d-8520-55ebb136b474.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T164800Z&X-Amz-Expires=300&X-Amz-Signature=886d555bf764c5ab733a59afe1c43775537d5cdb9e5e8ff8cde36488aca30568&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+    <img width="1440" height="900" alt="Caromoku Hero" src="./assets/Screenshot%202026-09-07%20at%2022.34.25.png" />
   </a>
 </div>
 
@@ -32,13 +32,13 @@ For the most responsive experience and instant input polling, you can **run the 
 ## 📸 Screenshots & Visual Modes
 
 <div align="center">
-  <img width="1440" height="900" alt="Caromoku Gameplay Overview" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400216-e406c04b-6fde-4006-82fa-36fc471ea315.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165144Z&X-Amz-Expires=300&X-Amz-Signature=c74ad656bcdf1fd6145c7cef53b853a334cdcc8912be22e0675e421b8d6fd764&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Gameplay Overview" src="./assets/Screenshot%202026-09-07%20at%2022.34.48.png" />
   <br/><br/>
-  <img width="1440" height="900" alt="Caromoku Dark Board" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400217-c3d647d9-e7b9-480c-89c3-94ea222ffedf.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165159Z&X-Amz-Expires=300&X-Amz-Signature=2916c2d1b1648620826933648b743b5f0ecda6b77d64ef5d202933906e96dad8&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Dark Board" src="./assets/Screenshot%202026-09-07%20at%2022.34.54.png" />
   <br/><br/>
-  <img width="1440" height="900" alt="Caromoku Board Style" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400219-78ac74a9-547f-4102-ba66-aba1f2a03463.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165221Z&X-Amz-Expires=300&X-Amz-Signature=0c625d42429114c452242ce4089dee1a9349cfaba136bd109531f230a0871226&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Board Style" src="./assets/Screenshot%202026-09-07%20at%2022.35.02.png" />
   <br/><br/>
-  <img width="1440" height="900" alt="Caromoku Grid Presentation" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400221-9e7835d7-5ade-4f21-bcef-2237b811444d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165235Z&X-Amz-Expires=300&X-Amz-Signature=772912656d7a0e01812d1d5554ace430cb30877626338c8b135e99f10e201bc9&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Grid Presentation" src="./assets/Screenshot%202026-09-07%20at%2022.36.27.png" />
 </div>
 
 ---
@@ -61,11 +61,11 @@ For the most responsive experience and instant input polling, you can **run the 
 ---
 
 <div align="center">
-  <img width="1440" height="900" alt="Caromoku Theme Contrast" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400225-7964cabe-b392-4641-8439-3a6865b6a83d.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165250Z&X-Amz-Expires=300&X-Amz-Signature=176fe1610a311121e2cd8ed17d88a2c99eead022e33dfbfc6893a258ea7498af&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Theme Contrast" src="./assets/Screenshot%202026-09-07%20at%2022.37.06.png" />
   <br/><br/>
-  <img width="1440" height="900" alt="Caromoku Options & Settings" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400215-7a088642-d977-4b3b-881a-db5604326dd2.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165301Z&X-Amz-Expires=300&X-Amz-Signature=e9bdaf94c8b24d22e0850207df4caf26720668ca07ebcb721eac22eb48dcf8a7&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Options & Settings" src="./assets/Screenshot%202026-09-07%20at%2022.38.57.png" />
   <br/><br/>
-  <img width="1440" height="900" alt="Caromoku Rules Modal" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400214-773e830e-abad-4c57-a6f2-2e631b49fa95.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165316Z&X-Amz-Expires=300&X-Amz-Signature=5bb3f8268d4d9ef8744ba1099a8c6587d358c3645f997c26432df23600c4d63d&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Rules Modal" src="./assets/Screenshot%202026-09-07%20at%2022.39.04.png" />
 </div>
 
 ---
@@ -84,9 +84,9 @@ For the most responsive experience and instant input polling, you can **run the 
 ---
 
 <div align="center">
-  <img width="1440" height="900" alt="Caromoku End Game State" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400218-de7cde2f-1ed4-4ecc-b352-bb8b97e56888.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165349Z&X-Amz-Expires=300&X-Amz-Signature=212a3341ec8970f90d8802603dab008cf4aa5ca5900d4f7aae71664144268ec9&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku End Game State" src="./assets/Screenshot%202026-09-07%20at%2022.40.43.png" />
   <br/><br/>
-  <img width="1440" height="900" alt="Caromoku Victory Highlight" src="https://github-production-user-asset-6210df.s3.amazonaws.com/141258233/647400223-50bfe397-f700-4d91-86c3-8596d116c4b4.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAVCODYLSA53PQK4ZA%2F20260907%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260907T165404Z&X-Amz-Expires=300&X-Amz-Signature=f97c77b0ae810cd00a1ae987e43afefd7a6f33efc107987709a21fc763a1bc7c&X-Amz-SignedHeaders=host&response-content-type=image%2Fpng" />
+  <img width="1440" height="900" alt="Caromoku Victory Highlight" src="./assets/Screenshot%202026-09-07%20at%2022.41.25.png" />
 </div>
 
 ---
