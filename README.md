@@ -91,4 +91,27 @@ For the most responsive experience and instant input polling, you can **run the 
 
 ---
 
+## 🔄 Theme Comparison: Same Endgame Position
+
+<table align="center">
+  <thead>
+    <tr>
+      <th align="center"><b>Gomoku Mode</b> (Intersections)</th>
+      <th align="center"><b>Cờ Caro Mode</b> (Square Cells)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">
+        <img width="700" alt="Gomoku Endgame Position" src="./assets/Screenshot%202026-09-08%20at%2000.42.45.png" />
+      </td>
+      <td align="center">
+        <img width="700" alt="Cờ Caro Endgame Position" src="./assets/Screenshot%202026-09-08%20at%2000.42.57.png" />
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
 *Developed by zzerodesigns | Zero Assets, Pure Logic*
