@@ -9,3 +9,5 @@ Always adhere strictly to the engineering rules and architectural standards defi
 
 ## Timestamp Requirement
 Whenever editing `/index.html`, you MUST update the `data-tooltip` attribute of `#footer-clock` (in the footer) to reflect the current local time in ICT (Indochina Time, UTC+7, formatted as `data-tooltip="Updated: YYYY-MM-DD HH:MM ICT"`).
+
+<!-- Checkpoint: Wed Sep 9 00:58 ~ -->
